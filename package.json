@@ -1,0 +1,51 @@
+{
+  "name": "@ota-eita/lockfile-guard",
+  "version": "0.1.0",
+  "description": "Supply-chain checks for package-lock.json: install scripts, non-registry sources, missing integrity, freshly published versions, typosquats and deprecated packages",
+  "license": "MIT",
+  "author": "OTA-EITA",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OTA-EITA/lockfile-guard.git"
+  },
+  "keywords": [
+    "npm",
+    "supply-chain",
+    "security",
+    "lockfile",
+    "typosquatting",
+    "sarif"
+  ],
+  "type": "module",
+  "bin": {
+    "lockfile-guard": "dist/cli.js"
+  },
+  "files": [
+    "dist/cli.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc --noEmit && node build.mjs",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@types/node": "^24.19.2",
+    "@vitest/coverage-v8": "^4.1.12",
+    "esbuild": "^0.28.2",
+    "eslint": "^9.39.5",
+    "prettier": "^3.9.10",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.72.0",
+    "vitest": "^4.1.12"
+  }
+}
