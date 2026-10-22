@@ -39,11 +39,14 @@ export function parseLockfile(file: string, source: string): Lockfile {
   } catch (err) {
     throw new Error(`${file}: invalid JSON: ${(err as Error).message}`);
   }
-  if (typeof raw !== "object" || raw === null || Array.isArray(raw)) throw new Error(`${file}: not a lockfile`);
+  if (typeof raw !== "object" || raw === null || Array.isArray(raw))
+    throw new Error(`${file}: not a lockfile`);
   const doc = raw as Record<string, unknown>;
   const version = typeof doc.lockfileVersion === "number" ? doc.lockfileVersion : 0;
   if (version < 2 || typeof doc.packages !== "object" || doc.packages === null) {
-    throw new Error(`${file}: lockfileVersion ${String(version)} is not supported; regenerate it with npm 7 or later`);
+    throw new Error(
+      `${file}: lockfileVersion ${String(version)} is not supported; regenerate it with npm 7 or later`,
+    );
   }
 
   // Precompute line numbers of every "packages" key.
