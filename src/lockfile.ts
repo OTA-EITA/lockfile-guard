@@ -37,7 +37,7 @@ export function parseLockfile(file: string, source: string): Lockfile {
   try {
     raw = JSON.parse(source);
   } catch (err) {
-    throw new Error(`${file}: invalid JSON: ${(err as Error).message}`);
+    throw new Error(`${file}: invalid JSON: ${(err as Error).message}`, { cause: err });
   }
   if (typeof raw !== "object" || raw === null || Array.isArray(raw))
     throw new Error(`${file}: not a lockfile`);
