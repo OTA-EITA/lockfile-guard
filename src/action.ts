@@ -8,6 +8,9 @@ import { scan } from "./scan.js";
 import { severityRank } from "./types.js";
 import type { Severity } from "./types.js";
 
+declare const __VERSION__: string | undefined;
+const version = typeof __VERSION__ === "string" ? __VERSION__ : "dev";
+
 function input(name: string, fallback: string): string {
   const v = process.env[`INPUT_${name.toUpperCase()}`];
   return v === undefined || v.trim() === "" ? fallback : v.trim();
@@ -32,7 +35,7 @@ async function run(): Promise<void> {
     concurrency: 8,
   });
 
-  const opts = { files: result.files, rules, version: "action" };
+  const opts = { files: result.files, rules, version };
   writeFileSync(sarifFile, render(result.findings, "sarif", opts));
   const summary = process.env.GITHUB_STEP_SUMMARY;
   if (summary) appendFileSync(summary, render(result.findings, "markdown", opts));
