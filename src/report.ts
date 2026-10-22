@@ -43,12 +43,10 @@ function markdown(findings: Finding[], files: number): string {
   const icon = findings.some((f) => f.severity === "high") ? "🛑" : findings.length ? "⚠️" : "✅";
   const out = [`### ${icon} lockfile-guard`, "", summary(findings, files), ""];
   if (findings.length) {
-    out.push("| Severity | Rule | Location | Problem | How to fix |", "|---|---|---|---|---|");
+    out.push("| Severity | Rule | Package | Problem | What to do |", "|---|---|---|---|---|");
     for (const f of findings) {
       const esc = (s: string | undefined) => (s ?? "").replaceAll("|", "\\|");
-      out.push(
-        `| ${f.severity} | ${f.ruleId} | \`${f.file}:${String(f.line)}\` | ${esc(f.message)} | ${esc(f.help)} |`,
-      );
+      out.push(`| ${f.severity} | ${f.ruleId} | \`${f.package}\` | ${esc(f.message)} | ${esc(f.help)} |`);
     }
   }
   return out.join("\n") + "\n";
