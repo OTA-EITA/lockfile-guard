@@ -13,7 +13,9 @@ export async function findLockfiles(root: string): Promise<string[]> {
   if ((await stat(root)).isFile()) return [root];
   const out: string[] = [];
   const walk = async (dir: string): Promise<void> => {
-    const entries = (await readdir(dir, { withFileTypes: true })).sort((a, b) => a.name.localeCompare(b.name));
+    const entries = (await readdir(dir, { withFileTypes: true })).sort((a, b) =>
+      a.name.localeCompare(b.name),
+    );
     for (const e of entries) {
       if (e.isDirectory()) {
         if (!skipDirs.has(e.name)) await walk(path.join(dir, e.name));
