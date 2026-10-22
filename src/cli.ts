@@ -139,6 +139,8 @@ export function isEntryPoint(argv1: string | undefined, moduleUrl: string): bool
   }
 }
 
+// Exercised by the packaged-binary check in CI rather than unit tests.
+/* v8 ignore start */
 if (isEntryPoint(process.argv[1], import.meta.url)) {
   main(process.argv.slice(2), {
     stdout: (s) => process.stdout.write(s),
@@ -157,3 +159,4 @@ if (isEntryPoint(process.argv[1], import.meta.url)) {
     },
   );
 }
+/* v8 ignore stop */
