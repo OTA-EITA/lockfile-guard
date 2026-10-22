@@ -26,7 +26,11 @@ export async function mapLimit<T, R>(items: T[], limit: number, fn: (item: T) =>
 
 const day = 24 * 60 * 60 * 1000;
 
-export async function checkOnline(lock: Lockfile, registry: Registry, opt: OnlineOptions): Promise<Finding[]> {
+export async function checkOnline(
+  lock: Lockfile,
+  registry: Registry,
+  opt: OnlineOptions,
+): Promise<Finding[]> {
   const installable = lock.packages.filter((p) => !p.link && p.resolved !== undefined && p.version !== "");
   const names = [...new Set(installable.map((p) => p.name))];
   const docs = new Map<string, Packument | null>();
