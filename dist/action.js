@@ -666,8 +666,16 @@ function input(name, fallback) {
   const v = process.env[`INPUT_${name.toUpperCase()}`];
   return v === void 0 || v.trim() === "" ? fallback : v.trim();
 }
+var escapeData = (s) => s.replaceAll("%", "%25").replaceAll("\r", "%0D").replaceAll("\n", "%0A");
+var escapeProperty = (s) => escapeData(s).replaceAll(":", "%3A").replaceAll(",", "%2C");
 async function run() {
   const failOn = input("fail-on", "high");
+  if (failOn !== "none" && !(failOn in severityRank)) {
+    throw new Error(`fail-on must be high, medium, low or none, got "${failOn}"`);
+  }
+  const minAgeDays = Number(input("min-age", "7"));
+  if (!Number.isFinite(minAgeDays) || minAgeDays < 0)
+    throw new Error("min-age must be a non-negative number of days");
   const sarifFile = input("sarif-file", "lockfile-guard.sarif");
   const registry = (process.env.npm_config_registry ?? "https://registry.npmjs.org").replace(/\/*$/, "/");
   const token = process.env.NPM_TOKEN;
@@ -675,7 +683,7 @@ async function run() {
     registries: [registry],
     allowScripts: input("allow-scripts", "").split(/[\s,]+/).filter(Boolean),
     registry: input("offline", "false") === "true" ? null : new HttpRegistry(token ? { url: registry, token } : { url: registry }),
-    minAgeDays: Number(input("min-age", "7")),
+    minAgeDays,
     now: /* @__PURE__ */ new Date(),
     concurrency: 8
   });
@@ -690,7 +698,7 @@ findings=${String(result.findings.length)}
   for (const f of result.findings) {
     const level = f.severity === "high" ? "error" : f.severity === "medium" ? "warning" : "notice";
     process.stdout.write(
-      `::${level} file=${f.file},line=${String(f.line)},title=${f.ruleId}::${f.message}
+      `::${level} file=${escapeProperty(f.file)},line=${String(f.line)},title=${f.ruleId}::${escapeData(f.message)}
 `
     );
   }
@@ -699,7 +707,7 @@ findings=${String(result.findings.length)}
   }
 }
 run().catch((err) => {
-  process.stdout.write(`::error::${String(err)}
+  process.stdout.write(`::error::${escapeData(String(err))}
 `);
   process.exitCode = 1;
 });
