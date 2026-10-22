@@ -16,6 +16,10 @@ function input(name: string, fallback: string): string {
   return v === undefined || v.trim() === "" ? fallback : v.trim();
 }
 
+// https://docs.github.com/actions/reference/workflow-commands-for-github-actions
+const escapeData = (s: string) => s.replaceAll("%", "%25").replaceAll("\r", "%0D").replaceAll("\n", "%0A");
+const escapeProperty = (s: string) => escapeData(s).replaceAll(":", "%3A").replaceAll(",", "%2C");
+
 async function run(): Promise<void> {
   const failOn = input("fail-on", "high");
   const sarifFile = input("sarif-file", "lockfile-guard.sarif");
@@ -44,7 +48,7 @@ async function run(): Promise<void> {
   for (const f of result.findings) {
     const level = f.severity === "high" ? "error" : f.severity === "medium" ? "warning" : "notice";
     process.stdout.write(
-      `::${level} file=${f.file},line=${String(f.line)},title=${f.ruleId}::${f.message}\n`,
+      `::${level} file=${escapeProperty(f.file)},line=${String(f.line)},title=${f.ruleId}::${escapeData(f.message)}\n`,
     );
   }
   if (
@@ -56,6 +60,6 @@ async function run(): Promise<void> {
 }
 
 run().catch((err: unknown) => {
-  process.stdout.write(`::error::${String(err)}\n`);
+  process.stdout.write(`::error::${escapeData(String(err))}\n`);
   process.exitCode = 1;
 });
