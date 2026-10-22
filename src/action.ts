@@ -22,6 +22,13 @@ const escapeProperty = (s: string) => escapeData(s).replaceAll(":", "%3A").repla
 
 async function run(): Promise<void> {
   const failOn = input("fail-on", "high");
+  // A typo must not turn the gate off silently.
+  if (failOn !== "none" && !(failOn in severityRank)) {
+    throw new Error(`fail-on must be high, medium, low or none, got "${failOn}"`);
+  }
+  const minAgeDays = Number(input("min-age", "7"));
+  if (!Number.isFinite(minAgeDays) || minAgeDays < 0)
+    throw new Error("min-age must be a non-negative number of days");
   const sarifFile = input("sarif-file", "lockfile-guard.sarif");
   const registry = (process.env.npm_config_registry ?? "https://registry.npmjs.org").replace(/\/*$/, "/");
   const token = process.env.NPM_TOKEN;
@@ -34,7 +41,7 @@ async function run(): Promise<void> {
       input("offline", "false") === "true"
         ? null
         : new HttpRegistry(token ? { url: registry, token } : { url: registry }),
-    minAgeDays: Number(input("min-age", "7")),
+    minAgeDays,
     now: new Date(),
     concurrency: 8,
   });
