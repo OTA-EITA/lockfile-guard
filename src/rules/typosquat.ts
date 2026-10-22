@@ -11,11 +11,13 @@ export function editDistance(a: string, b: string): number {
   );
   const at = (i: number, j: number) => d[i]?.[j] ?? Number.POSITIVE_INFINITY;
   for (let i = 1; i <= a.length; i++) {
+    const row = d[i] ?? [];
     for (let j = 1; j <= b.length; j++) {
       const cost = a[i - 1] === b[j - 1] ? 0 : 1;
       let v = Math.min(at(i - 1, j) + 1, at(i, j - 1) + 1, at(i - 1, j - 1) + cost);
-      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) v = Math.min(v, at(i - 2, j - 2) + 1);
-      (d[i] as number[])[j] = v;
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1])
+        v = Math.min(v, at(i - 2, j - 2) + 1);
+      row[j] = v;
     }
   }
   return at(a.length, b.length);
