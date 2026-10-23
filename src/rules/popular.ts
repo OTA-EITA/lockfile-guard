@@ -235,4 +235,9 @@ export const popular: readonly string[] = [
   "electron",
   "react-native",
   "expo",
+  // Widely used packages that are one edit away from another popular name.
+  // Found as false positives by scanning real lockfiles.
+  "safer-buffer",
+  "object.assign",
+  "gaxios",
 ];
