@@ -457,7 +457,12 @@ var popular = [
   "log4js",
   "electron",
   "react-native",
-  "expo"
+  "expo",
+  // Widely used packages that are one edit away from another popular name.
+  // Found as false positives by scanning real lockfiles.
+  "safer-buffer",
+  "object.assign",
+  "gaxios"
 ];
 
 // src/rules/typosquat.ts
@@ -666,7 +671,7 @@ async function scan(paths, cwd, opt) {
 }
 
 // src/cli.ts
-var version = true ? "0.1.0" : "dev";
+var version = true ? "0.1.1" : "dev";
 var usage = `usage: lockfile-guard [options] [path ...]
 
 Checks package-lock.json files for supply-chain risks. Paths default to the
