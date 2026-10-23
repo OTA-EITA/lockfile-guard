@@ -1,6 +1,6 @@
 {
   "name": "@ota-eita/lockfile-guard",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Supply-chain checks for package-lock.json: install scripts, non-registry sources, missing integrity, freshly published versions, typosquats and deprecated packages",
   "license": "MIT",
   "author": "OTA-EITA",
