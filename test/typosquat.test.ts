@@ -35,6 +35,13 @@ describe("imitates", () => {
     expect(imitates("my-company-utils")).toBeUndefined();
   });
 
+  it("does not flag legitimate packages that sit next to popular names", () => {
+    // Real false positives found by scanning lockfiles.
+    expect(imitates("safer-buffer")).toBeUndefined();
+    expect(imitates("object.assign")).toBeUndefined();
+    expect(imitates("gaxios")).toBeUndefined();
+  });
+
   it("ignores one-letter neighbours of short names", () => {
     expect(imitates("reac")).toBeUndefined(); // 4 letters, one edit from react
   });
